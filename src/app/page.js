@@ -1,103 +1,74 @@
+"use client";
 import Image from "next/image";
+import { useState, useMemo } from "react";
+import CookieConsentProvider from "./components/CookieConsentProvider";
+import Screen1 from "./screens/Screen1";
+import Screen1a from "./screens/Screen1a";
+import Screen2 from "./screens/Screen2";
+import Screen3 from "./screens/Screen3";
+import Screen4 from "./screens/Screen4";
+import ScreenPhone from "./screens/ScreenPhone";
+import Screen5 from "./screens/Screen5";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const [stepIndex, setStepIndex] = useState(0);
+    const [answers, setAnswers] = useState([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const screens = useMemo(() => [
+        (onNext) => <Screen1a onSelect={onNext} />, // Postcode first
+        (onNext) => <Screen1 onSelect={onNext} />, // Property details options
+        (onNext) => <Screen2 onSelect={onNext} />, // Floors
+        (onNext) => <Screen3 onSelect={onNext} />, // Business type
+        (onNext) => <Screen4 onSelect={onNext} />, // Solutions
+        (onNext) => <ScreenPhone onSelect={onNext} />, // Phone number
+        () => <Screen5 answers={answers} onRestart={handleRestart} />, // Summary
+    ], [answers]);
+
+    function handleSelect(label) {
+        const nextAnswers = [...answers, label];
+        setAnswers(nextAnswers);
+        setStepIndex(Math.min(stepIndex + 1, screens.length - 1));
+    }
+
+    function handleRestart() {
+        setAnswers([]);
+        setStepIndex(0);
+    }
+
+    const CurrentScreen = screens[stepIndex];
+
+    return (
+     <div>
+       <CookieConsentProvider />
+       <header>
+        <img src="logo.avif" alt="Header logo" />
+      </header>
+      
+      
+      {typeof CurrentScreen === "function" && (
+        <div>
+          {stepIndex < screens.length - 1 ? (
+            CurrentScreen(handleSelect)
+          ) : (
+            CurrentScreen()
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      )}
+
+
+      <footer>
+        <div class="footer-container">
+          <img src="trustpilot.webp" alt="trustpilot image" />
+          <div className="footer-links">
+            <ul className="link-list">
+            <li><a href="http://homesecurityhelper.co.uk/temp-page/privacy.php" target="_blank" rel="noreferrer" aria-label="Privacy Policy (opens in a new tab)">Privacy Policy</a></li>
+            <li><a href="http://homesecurityhelper.co.uk/temp-page/terms.php" target="_blank" rel="noreferrer" aria-label="Terms &amp; Conditions (opens in a new tab)">Terms &amp; Conditions</a></li>
+            <li><a href="http://homesecurityhelper.co.uk/temp-page/privacy.php" target="_blank" rel="noreferrer" aria-label="Privacy Policy (opens in a new tab)">Privacy Policy</a></li>
+            </ul>
+          </div>
+          Copyright © 2025
+        </div>
       </footer>
-    </div>
-  );
+     </div>
+    );
 }
