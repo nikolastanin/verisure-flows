@@ -1,7 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
+import Stepper from "../components/Stepper";
 
-export default function Screen1a({ onSelect }) {
+export default function Screen1a({ onSelect, stepIndex }) {
     const [postcode, setPostcode] = useState("");
     const [touched, setTouched] = useState(false);
 
@@ -18,12 +19,7 @@ export default function Screen1a({ onSelect }) {
 
     return (
         <div className="form-container">
-            <div className="stepper">
-                <span className="step active">Property Details</span>
-                <span className="step">Alarm Equipment</span>
-                <span className="step">Contact Details</span>
-                <span className="step">Done</span>
-            </div>
+            <Stepper currentStep={stepIndex} />
             <h1 className="question-title">What is the postcode of the property you'd like to protect?</h1>
             <div className="input-group">
                 <input

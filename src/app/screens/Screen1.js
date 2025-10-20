@@ -1,4 +1,7 @@
-export default function Screen1({ onSelect }) {
+"use client";
+import Stepper from "../components/Stepper";
+
+export default function Screen1({ onSelect, stepIndex }) {
     const options = [
         "Door at street level",
         "Premises in a shopping centre/mall",
@@ -8,12 +11,7 @@ export default function Screen1({ onSelect }) {
 
     return (
         <div className="form-container">
-            <div className="stepper">
-                <span className="step active">Property Details</span>
-                <span className="step">Alarm Equipment</span>
-                <span className="step">Contact Details</span>
-                <span className="step">Done</span>
-            </div>
+            <Stepper currentStep={stepIndex} />
             <h1 className="question-title">What is your business like?</h1>
             <ul className="option-list">
                 {options.map((label) => (

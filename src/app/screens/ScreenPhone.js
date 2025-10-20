@@ -1,7 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
+import Stepper from "../components/Stepper";
 
-export default function ScreenPhone({ onSelect }) {
+export default function ScreenPhone({ onSelect, stepIndex }) {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [touched, setTouched] = useState(false);
 
@@ -20,12 +21,7 @@ export default function ScreenPhone({ onSelect }) {
 
     return (
         <div className="form-container">
-            <div className="stepper">
-                <span className="step">Property Details</span>
-                <span className="step">Alarm Equipment</span>
-                <span className="step active">Contact Details</span>
-                <span className="step">Done</span>
-            </div>
+            <Stepper currentStep={stepIndex} />
             <h1 className="question-title">In order to continue with your quote, please provide your phone number:</h1>
             <div className="input-group">
                 <div className="phone-input-wrapper">

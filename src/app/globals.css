@@ -269,3 +269,121 @@ div.footer-container img {
 .privacy-link-text:hover {
     text-decoration: underline;
 }
+
+
+/* Stepper styles */
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 32px 0;
+    position: relative;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stepper-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.stepper-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.stepper-icon img {
+    width: 24px;
+    height: 24px;
+    color: #999;
+    transition: all 0.3s ease;
+}
+
+.stepper-icon.active {
+    border-color: var(--brand-color);
+    background: var(--brand-color);
+}
+
+.stepper-icon.active img {
+    filter: invert(1) brightness(200%);
+}
+
+.stepper-icon.completed {
+    border-color: var(--brand-color);
+    background: var(--brand-color);
+}
+
+.stepper-icon.completed img {
+    filter: invert(1) brightness(200%);
+}
+
+.stepper-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 8px;
+    color: #999;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.stepper-label.active {
+    color: var(--brand-color);
+    font-weight: 600;
+}
+
+.stepper-label.completed {
+    color: var(--brand-color);
+}
+
+.stepper-line {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: #e6e6e6;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.stepper-line.completed {
+    background: var(--brand-color);
+}
+
+.stepper-item:last-child .stepper-line {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .stepper {
+        margin: 16px 0;
+    }
+    .stepper-icon {
+        width: 40px;
+        height: 40px;
+    }
+    .stepper-icon img {
+        width: 20px;
+        height: 20px;
+    }
+    .stepper-label {
+        font-size: 12px;
+    }
+    .stepper-line {
+        top: 20px;
+    }
+}

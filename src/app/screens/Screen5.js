@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import Stepper from "../components/Stepper";
 
-export default function Screen5({ answers, onRestart }) {
+export default function Screen5({ answers, onRestart, stepIndex }) {
     const [status, setStatus] = useState('processing'); // processing, submitting, success
 
     useEffect(() => {
@@ -78,12 +79,7 @@ export default function Screen5({ answers, onRestart }) {
 
     return (
         <div className="form-container">
-            <div className="stepper">
-                <span className="step">Property Details</span>
-                <span className="step">Alarm Equipment</span>
-                <span className="step">Contact Details</span>
-                <span className="step active">Done</span>
-            </div>
+            <Stepper currentStep={stepIndex} />
             
             {status === 'processing' && (
                 <>

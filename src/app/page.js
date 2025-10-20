@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState, useMemo } from "react";
 import CookieConsentProvider from "./components/CookieConsentProvider";
+import Stepper from "./components/Stepper";
 import Screen1 from "./screens/Screen1";
 import Screen1a from "./screens/Screen1a";
 import Screen2 from "./screens/Screen2";
@@ -15,14 +16,14 @@ export default function Home() {
     const [answers, setAnswers] = useState([]);
 
     const screens = useMemo(() => [
-        (onNext) => <Screen1a onSelect={onNext} />, // Postcode first
-        (onNext) => <Screen1 onSelect={onNext} />, // Property details options
-        (onNext) => <Screen2 onSelect={onNext} />, // Floors
-        (onNext) => <Screen3 onSelect={onNext} />, // Business type
-        (onNext) => <Screen4 onSelect={onNext} />, // Solutions
-        (onNext) => <ScreenPhone onSelect={onNext} />, // Phone number
-        () => <Screen5 answers={answers} onRestart={handleRestart} />, // Summary
-    ], [answers]);
+        (onNext) => <Screen1a onSelect={onNext} stepIndex={stepIndex} />, // Postcode first
+        (onNext) => <Screen1 onSelect={onNext} stepIndex={stepIndex} />, // Property details options
+        (onNext) => <Screen2 onSelect={onNext} stepIndex={stepIndex} />, // Floors
+        (onNext) => <Screen3 onSelect={onNext} stepIndex={stepIndex} />, // Business type
+        (onNext) => <Screen4 onSelect={onNext} stepIndex={stepIndex} />, // Solutions
+        (onNext) => <ScreenPhone onSelect={onNext} stepIndex={stepIndex} />, // Phone number
+        () => <Screen5 answers={answers} onRestart={handleRestart} stepIndex={stepIndex} />, // Summary
+    ], [answers, stepIndex]);
 
     function handleSelect(label) {
         const nextAnswers = [...answers, label];

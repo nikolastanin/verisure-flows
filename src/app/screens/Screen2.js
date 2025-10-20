@@ -1,5 +1,7 @@
 "use client";
-export default function Screen2({ onSelect }) {
+import Stepper from "../components/Stepper";
+
+export default function Screen2({ onSelect, stepIndex }) {
     const options = [
         "Ground floor",
         "Multiple floors",
@@ -9,6 +11,7 @@ export default function Screen2({ onSelect }) {
 
     return (
         <div className="form-container">
+            <Stepper currentStep={stepIndex} />
             <h1 className="question-title">How many floors does it occupy?</h1>
             <ul className="option-list">
                 {options.map((label) => (

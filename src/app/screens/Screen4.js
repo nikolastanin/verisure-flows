@@ -1,5 +1,7 @@
 "use client";
-export default function Screen4({ onSelect }) {
+import Stepper from "../components/Stepper";
+
+export default function Screen4({ onSelect, stepIndex }) {
     const options = [
         "Monitored alarm",
         "CCTV",
@@ -9,6 +11,7 @@ export default function Screen4({ onSelect }) {
 
     return (
         <div className="form-container">
+            <Stepper currentStep={stepIndex} />
             <h1 className="question-title">Which solutions are you interested in?</h1>
             <ul className="option-list">
                 {options.map((label) => (
