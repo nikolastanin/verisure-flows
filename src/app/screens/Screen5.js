@@ -96,8 +96,8 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                 // Redirect after another 2 seconds
                 setTimeout(() => {
                     window.location.href = `https://homesecurityhelper.co.uk/verisure-thank-you/?clickid=${clickid}`;
-                }, 2000);
-            }, 2000);
+                }, 0);
+            }, 0);
         };
 
         submitFormData();
