@@ -8,22 +8,55 @@ import Screen1a from "./screens/Screen1a";
 import Screen2 from "./screens/Screen2";
 import Screen3 from "./screens/Screen3";
 import Screen4 from "./screens/Screen4";
+import Screen6 from "./screens/Screen6";
 import ScreenPhone from "./screens/ScreenPhone";
 import Screen5 from "./screens/Screen5";
 
 export default function Home() {
     const [stepIndex, setStepIndex] = useState(0);
     const [answers, setAnswers] = useState([]);
+    const [userType, setUserType] = useState(null); // "Home" or "Business"
 
-    const screens = useMemo(() => [
-        (onNext) => <Screen1a onSelect={onNext} stepIndex={stepIndex} />, // Postcode first
-        (onNext) => <Screen1 onSelect={onNext} stepIndex={stepIndex} />, // Property details options
-        (onNext) => <Screen2 onSelect={onNext} stepIndex={stepIndex} />, // Floors
-        (onNext) => <Screen3 onSelect={onNext} stepIndex={stepIndex} />, // Business type
-        (onNext) => <Screen4 onSelect={onNext} stepIndex={stepIndex} />, // Solutions
-        (onNext) => <ScreenPhone onSelect={onNext} stepIndex={stepIndex} />, // Phone number
-        () => <Screen5 answers={answers} onRestart={handleRestart} stepIndex={stepIndex} />, // Summary
-    ], [answers, stepIndex]);
+    const getScreens = () => {
+        if (!userType) {
+            // Initial screen to choose Home or Business
+            return [
+                () => <Screen1 onSelect={handleInitialSelect} stepIndex={stepIndex} />
+            ];
+        }
+
+        if (userType === "Home") {
+            return [
+                (onNext) => <Screen1 onSelect={(choice) => {
+                    setUserType(choice);
+                    onNext(choice);
+                }} stepIndex={stepIndex} />, // Home/Business choice
+                (onNext) => <Screen2 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Home type
+                (onNext) => <Screen3 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Camera options
+                (onNext) => <Screen4 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Devices
+                (onNext) => <Screen1a onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Postcode
+                (onNext) => <ScreenPhone onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Phone
+                () => <Screen5 answers={answers} onRestart={handleRestart} stepIndex={stepIndex} userType={userType} />, // Thank you
+            ];
+        } else {
+            // Business flow
+            return [
+                (onNext) => <Screen1 onSelect={(choice) => {
+                    setUserType(choice);
+                    onNext(choice);
+                }} stepIndex={stepIndex} />, // Home/Business choice
+                (onNext) => <Screen2 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Business type
+                (onNext) => <Screen3 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Goods type
+                (onNext) => <Screen4 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Devices
+                (onNext) => <Screen1a onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Postcode
+                (onNext) => <Screen6 onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Burglary question
+                (onNext) => <ScreenPhone onSelect={onNext} stepIndex={stepIndex} userType={userType} />, // Phone
+                () => <Screen5 answers={answers} onRestart={handleRestart} stepIndex={stepIndex} userType={userType} />, // Thank you
+            ];
+        }
+    };
+
+    const screens = useMemo(() => getScreens(), [answers, stepIndex, userType]);
 
     function handleSelect(label) {
         const nextAnswers = [...answers, label];
@@ -31,9 +64,15 @@ export default function Home() {
         setStepIndex(Math.min(stepIndex + 1, screens.length - 1));
     }
 
+    function handleInitialSelect(choice) {
+        setUserType(choice);
+        setStepIndex(1); // Move to the next screen after selecting user type
+    }
+
     function handleRestart() {
         setAnswers([]);
         setStepIndex(0);
+        setUserType(null);
     }
 
     const CurrentScreen = screens[stepIndex];
@@ -48,7 +87,7 @@ export default function Home() {
       
       {typeof CurrentScreen === "function" && (
         <div>
-          {stepIndex < screens.length - 1 ? (
+          {!userType || stepIndex < screens.length - 1 ? (
             CurrentScreen(handleSelect)
           ) : (
             CurrentScreen()
@@ -58,7 +97,7 @@ export default function Home() {
 
 
       <footer>
-        <div class="footer-container">
+        <div className="footer-container">
           <img src="trustpilot.webp" alt="trustpilot image" />
           <div className="footer-links">
             <ul className="link-list">

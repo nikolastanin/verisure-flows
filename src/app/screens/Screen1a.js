@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import Stepper from "../components/Stepper";
 
-export default function Screen1a({ onSelect, stepIndex }) {
+export default function Screen1a({ onSelect, stepIndex, userType }) {
     const [postcode, setPostcode] = useState("");
     const [touched, setTouched] = useState(false);
 
@@ -20,7 +20,7 @@ export default function Screen1a({ onSelect, stepIndex }) {
     return (
         <div className="form-container">
             <Stepper currentStep={stepIndex} />
-            <h1 className="question-title">What is the postcode of the property you'd like to protect?</h1>
+            <h1 className="question-title">{userType === "Home" ? "What is the postcode of the property you'd like to protect?" : "What is the post code of your business?"}</h1>
             <div className="input-group">
                 <input
                     className={`text-input${touched && !isValid ? " invalid" : ""}`}

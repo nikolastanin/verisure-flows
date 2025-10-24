@@ -1,18 +1,30 @@
 "use client";
 import Stepper from "../components/Stepper";
 
-export default function Screen4({ onSelect, stepIndex }) {
-    const options = [
-        "Monitored alarm",
-        "CCTV",
-        "Access control",
-        "Not sure yet",
+export default function Screen4({ onSelect, stepIndex, userType }) {
+    const homeOptions = [
+        "Monitored alarm systems",
+        "Monitored security cameras",
+        "Monitored video doorbell",
+        "All of the above",
     ];
+
+    const businessOptions = [
+        "Alarms",
+        "Security Cameras",
+        "Video doorbell",
+        "All of the above",
+    ];
+
+    const options = userType === "Home" ? homeOptions : businessOptions;
+    const title = userType === "Home" 
+        ? "Which devices would you like to be included in your home security system?" 
+        : "Which devices are you interested in?";
 
     return (
         <div className="form-container">
             <Stepper currentStep={stepIndex} />
-            <h1 className="question-title">Which solutions are you interested in?</h1>
+            <h1 className="question-title">{title}</h1>
             <ul className="option-list">
                 {options.map((label) => (
                     <li key={label}>

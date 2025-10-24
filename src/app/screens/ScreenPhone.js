@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import Stepper from "../components/Stepper";
 
-export default function ScreenPhone({ onSelect, stepIndex }) {
+export default function ScreenPhone({ onSelect, stepIndex, userType }) {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [touched, setTouched] = useState(false);
 

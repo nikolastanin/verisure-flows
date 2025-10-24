@@ -1,29 +1,17 @@
 "use client";
 import Stepper from "../components/Stepper";
 
-export default function Screen3({ onSelect, stepIndex, userType }) {
-    const homeOptions = [
-        "Yes, a video doorbell",
-        "Yes, indoor camera(s)",
-        "Yes, perimiter(outdoor) cameras",
+export default function Screen6({ onSelect, stepIndex, userType }) {
+    // This screen is only for Business flow - burglary question
+    const options = [
         "No",
+        "Yes",
     ];
-
-    const businessOptions = [
-        "High value",
-        "Mid value",
-        "Low value",
-    ];
-
-    const options = userType === "Home" ? homeOptions : businessOptions;
-    const title = userType === "Home" 
-        ? "What type of home do you need an alarm for?" 
-        : "What type of goods does your business deal in?";
 
     return (
         <div className="form-container">
             <Stepper currentStep={stepIndex} />
-            <h1 className="question-title">{title}</h1>
+            <h1 className="question-title">Has your business or any nearby business ever been burgled before?</h1>
             <ul className="option-list">
                 {options.map((label) => (
                     <li key={label}>

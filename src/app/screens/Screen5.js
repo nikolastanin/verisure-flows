@@ -2,32 +2,58 @@
 import { useEffect, useState } from "react";
 import Stepper from "../components/Stepper";
 
-export default function Screen5({ answers, onRestart, stepIndex }) {
+export default function Screen5({ answers, onRestart, stepIndex, userType }) {
     const [status, setStatus] = useState('processing'); // processing, submitting, success
+    const [hasSubmitted, setHasSubmitted] = useState(false);
 
     useEffect(() => {
+        if (hasSubmitted) return; // Prevent duplicate submissions
+        
         const submitFormData = async () => {
-            // Parse answers: [postcode, business_type, floors, business_category, solutions, phone]
-            const [postcode, businessType, floors, businessCategory, solutions, phone] = answers;
-
+            setHasSubmitted(true);
             // Get URL parameters for tracking
             const urlParams = new URLSearchParams(window.location.search);
             const clickid = urlParams.get('clickid') || '';
             const lpSubid1 = urlParams.get('lp_subid1') || '';
 
-            // Map solutions to device IDs
-            const deviceMapping = {
-                'Monitored alarm': '1',
-                'CCTV': '2', 
-                'Access control': '3',
-                'Not sure yet': '1,2,3'
-            };
+            let phone, postcode, devices, burgled = '0';
+
+            if (userType === "Home") {
+                // Home flow: [userType, homeType, cameraOptions, devices, postcode, phone]
+                const [, homeType, cameraOptions, deviceChoice, postcodeValue, phoneValue] = answers;
+                phone = phoneValue;
+                postcode = postcodeValue;
+                
+                // Map Home devices to device IDs
+                const homeDeviceMapping = {
+                    'Monitored alarm systems': '1',
+                    'Monitored security cameras': '2',
+                    'Monitored video doorbell': '3',
+                    'All of the above': '1,2,3'
+                };
+                devices = homeDeviceMapping[deviceChoice] || '1';
+            } else {
+                // Business flow: [userType, businessType, goodsType, devices, postcode, burglaryAnswer, phone]
+                const [, businessType, goodsType, deviceChoice, postcodeValue, burglaryAnswer, phoneValue] = answers;
+                phone = phoneValue;
+                postcode = postcodeValue;
+                burgled = burglaryAnswer === 'Yes' ? '1' : '0';
+                
+                // Map Business devices to device IDs
+                const businessDeviceMapping = {
+                    'Alarms': '1',
+                    'Security Cameras': '2',
+                    'Video doorbell': '3',
+                    'All of the above': '1,2,3'
+                };
+                devices = businessDeviceMapping[deviceChoice] || '1';
+            }
 
             const formData = {
                 customerData: {
                     phone: phone || '',
-                    burgled: '0', // Default to no, could be added as a question
-                    devices: deviceMapping[solutions] || '1',
+                    burgled: burgled,
+                    devices: devices,
                     postcode: postcode || ''
                 },
                 trackingData: {
@@ -69,13 +95,13 @@ export default function Screen5({ answers, onRestart, stepIndex }) {
 
                 // Redirect after another 2 seconds
                 setTimeout(() => {
-                    // window.location.href = `https://homesecurityhelper.co.uk/verisure-thank-you/?clickid=${clickid}`;
+                    window.location.href = `https://homesecurityhelper.co.uk/verisure-thank-you/?clickid=${clickid}`;
                 }, 2000);
             }, 2000);
         };
 
         submitFormData();
-    }, [answers]);
+    }, [answers, userType, hasSubmitted]);
 
     return (
         <div className="form-container">
