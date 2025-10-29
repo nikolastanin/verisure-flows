@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useState, useMemo } from "react";
 import CookieConsentProvider from "./components/CookieConsentProvider";
-import TrustedForm from "./components/TrustedForm";
 import Stepper from "./components/Stepper";
 import Screen1 from "./screens/Screen1";
 import Screen1a from "./screens/Screen1a";
@@ -81,7 +80,6 @@ export default function Home() {
     return (
      <div>
        <CookieConsentProvider />
-      <TrustedForm />
        <header>
         <img src="logo.avif" alt="Header logo" />
       </header>

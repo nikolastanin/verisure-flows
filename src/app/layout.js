@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Fira_Sans } from "next/font/google";
 import "./globals.css";
+import TrustedForm from "./components/TrustedForm";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} ${firaSans.variable} antialiased`}>
+                <TrustedForm />
                 {children}
             </body>
         </html>
