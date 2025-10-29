@@ -8,8 +8,8 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
 
     useEffect(() => {
         if (hasSubmitted) return; // Prevent duplicate submissions
-        
-        const submitFormData = async () => {
+
+        const submitFormData = async() => {
             setHasSubmitted(true);
             // Get URL parameters for tracking
             const urlParams = new URLSearchParams(window.location.search);
@@ -23,7 +23,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                 const [, homeType, cameraOptions, deviceChoice, postcodeValue, phoneValue] = answers;
                 phone = phoneValue;
                 postcode = postcodeValue;
-                
+
                 // Map Home devices to device IDs
                 const homeDeviceMapping = {
                     'Monitored alarm systems': '1',
@@ -38,7 +38,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                 phone = phoneValue;
                 postcode = postcodeValue;
                 burgled = burglaryAnswer === 'Yes' ? '1' : '0';
-                
+
                 // Map Business devices to device IDs
                 const businessDeviceMapping = {
                     'Alarms': '1',
@@ -47,6 +47,18 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                     'All of the above': '1,2,3'
                 };
                 devices = businessDeviceMapping[deviceChoice] || '1';
+            }
+
+            // Attempt to read TrustedForm values populated by the injected script
+            let trustedFormCertUrl = "";
+            let trustedFormPingUrl = "";
+            try {
+                const certEl = document.getElementsByName("xxTrustedFormCertUrl")[0];
+                const pingEl = document.getElementsByName("xxTrustedFormPingUrl")[0];
+                trustedFormCertUrl = certEl && certEl.value ? certEl.value : "";
+                trustedFormPingUrl = pingEl && pingEl.value ? pingEl.value : "";
+            } catch (_) {
+                // Ignore if DOM not available
             }
 
             const formData = {
@@ -58,7 +70,9 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                 },
                 trackingData: {
                     SupplierLeadID: clickid || '2',
-                    SupplierCampaignID: lpSubid1 || '2'
+                    SupplierCampaignID: lpSubid1 || '2',
+                    trustedFormCertUrl: trustedFormCertUrl,
+                    trustedFormPingUrl: trustedFormPingUrl
                 },
                 apiKey: process.env.NEXT_PUBLIC_VERISURE_API_KEY
             };
@@ -66,9 +80,9 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
             console.log('Form data to submit:', JSON.stringify(formData, null, 2));
 
             // Wait 2 seconds, then submit
-            setTimeout(async () => {
+            setTimeout(async() => {
                 setStatus('submitting');
-                
+
                 try {
                     const response = await fetch('https://vapi.verisureapp.co.uk/api/leads', {
                         method: 'POST',
@@ -79,7 +93,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                     });
 
                     console.log('API Response status:', response.status);
-                    
+
                     if (response.ok) {
                         const responseData = await response.json();
                         console.log('API Response data:', responseData);
@@ -106,7 +120,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
     return (
         <div className="form-container">
             <Stepper currentStep={stepIndex} />
-            
+
             {status === 'processing' && (
                 <>
                     <h1 className="question-title">Processing your request...</h1>
@@ -116,7 +130,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                     </div>
                 </>
             )}
-            
+
             {status === 'submitting' && (
                 <>
                     <h1 className="question-title">Submitting your details...</h1>
@@ -126,7 +140,7 @@ export default function Screen5({ answers, onRestart, stepIndex, userType }) {
                     </div>
                 </>
             )}
-            
+
             {status === 'success' && (
                 <>
                     <h1 className="question-title">Thank you!</h1>
