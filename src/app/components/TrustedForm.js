@@ -6,10 +6,8 @@ export default function TrustedForm() {
 
 
         
-            <div style={{ display: "none" }} aria-hidden="true">
-                <input type="hidden" name="xxTrustedFormCertUrl" value="" />
-                <input type="hidden" name="xxTrustedFormPingUrl" value="" />
-            </div>
+            <input type="hidden" name="xxTrustedFormCertUrl" value="" />
+            <input type="hidden" name="xxTrustedFormPingUrl" value="" />
             <script
                 type="text/javascript"
                 dangerouslySetInnerHTML={{
